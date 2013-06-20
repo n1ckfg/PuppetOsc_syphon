@@ -12,3 +12,30 @@ OSC Receive Port
 
 Hand Trigger Distance
 100
+
+Audio Trigger
+true
+
+Debug Mode
+false
+
+Bacteria Mode
+true
+
+Sprite Folder - Head
+horsebuyer
+
+Sprite Folder - Arm
+lightning-h
+
+Sprite Folder - Leg
+lightning-h
+
+Sprite Folder - Torso
+lightning-h
+
+Spritesheet - Bacterium
+bacterium
+
+Syphon Server Name
+"Processing Syphon"

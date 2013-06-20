@@ -12,6 +12,15 @@ class Settings {
         if (settings.data[i].equals("Framerate")) fps = setInt(settings.data[i+1]);
         if (settings.data[i].equals("OSC Receive Port")) receivePort = setInt(settings.data[i+1]);
         if (settings.data[i].equals("Hand Trigger Distance")) tractorLimit = setFloat(settings.data[i+1]);
+        if (settings.data[i].equals("Audio Trigger")) audioTrigger = setBoolean(settings.data[i+1]);
+        if (settings.data[i].equals("Debug Mode")) debug = setBoolean(settings.data[i+1]);
+        if (settings.data[i].equals("Bacteria Mode")) doBacteria = setBoolean(settings.data[i+1]);
+        if (settings.data[i].equals("Sprite Folder - Head")) spriteFolderHead = setString(settings.data[i+1]);
+        if (settings.data[i].equals("Sprite Folder - Arm")) spriteFolderArm = setString(settings.data[i+1]);
+        if (settings.data[i].equals("Sprite Folder - Leg")) spriteFolderLeg = setString(settings.data[i+1]);
+        if (settings.data[i].equals("Sprite Folder - Torso")) spriteFolderTorso = setString(settings.data[i+1]);
+        if (settings.data[i].equals("Spritesheet - Bacterium")) spriteSheetBacterium = setString(settings.data[i+1]);
+        if (settings.data[i].equals("Syphon Server Name")) syphonServerName = setString(settings.data[i+1]);
        }
     } 
     catch(Exception e) {

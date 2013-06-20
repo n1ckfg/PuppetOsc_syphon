@@ -1,7 +1,7 @@
 class Arm extends Limb{
   
     Arm(){
-      super("lightning-h",12);
+      super(spriteFolderArm,12);
       init();
     }
     

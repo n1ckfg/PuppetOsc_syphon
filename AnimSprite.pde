@@ -185,7 +185,11 @@ PVector projToVert(PVector _p, PVector _centerPoint){
     //draw
     if(!isTexture){
       canvas.imageMode(CENTER);
-      canvas.image(frames[frameIndex], 0, 0);
+      try{
+        canvas.image(frames[frameIndex], 0, 0);
+      }catch(Exception e){ 
+        canvas.image(frames[0], 0, 0);
+      }
     }else{
       for(int i=0;i<vertices.length;i++){
         vertices_proj[i] = vertToProj(vertices[i],p);

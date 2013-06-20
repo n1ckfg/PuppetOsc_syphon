@@ -1,7 +1,7 @@
 class Bacterium extends AnimSprite{
  
  Bacterium(){
-   super("bacterium",12,50,50,10,10);
+   super(spriteSheetBacterium,12,50,50,10,10);
    init();
  }
 

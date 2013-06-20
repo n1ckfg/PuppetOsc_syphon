@@ -15,14 +15,24 @@ SyphonServer server;
 PGraphics canvas;
 
 boolean debug = false;
+boolean audioTrigger = true;
 boolean hideCursor = true;
 boolean alphaMode = true;
 boolean isadoraEcho = true;
+boolean doBacteria = true;
 
 String[] osceletonNames = {
   "head", "neck", "torso", "l_shoulder", "l_elbow", "l_hand", "r_shoulder", "r_elbow", "r_hand", "l_hip", "l_knee", "l_foot", "r_hip", "r_knee", "r_foot"
 };
 PVector[] osceletonVec = new PVector[osceletonNames.length];
+
+String spriteFolderHead = "horsebuyer";
+String spriteFolderArm = "lightning-h";
+String spriteFolderLeg = "lightning-h";
+String spriteFolderTorso = "lightning-h";
+String spriteSheetBacterium = "bacterium";
+
+String syphonServerName = "Processing Syphon";
 
 float noiseIter = 0.0;
 int ballSize = 10;
@@ -47,22 +57,25 @@ void setup() {
   //hint( ENABLE_OPENGL_4X_SMOOTH );
   if (hideCursor) noCursor();  
   size(sW, sH, P3D);    // use OPENGL rendering for bilinear filtering on texture
-  server = new SyphonServer(this, "Processing Syphon");
+  server = new SyphonServer(this, syphonServerName);
   canvas = createGraphics(sW,sH,P3D);
   frameRate(fps);
   smooth();
-  head = new AnimSprite("horsebuyer", 12);
+  head = new AnimSprite(spriteFolderHead, 12);
   head.playing = false;
   head.s = new PVector(0.8, 0.8);
+  if(debug) head.debug = true;
   oscSetup();
-  minim = new Minim(this);
-  adc = minim.getLineIn( Minim.MONO, 512 );
+  if(audioTrigger){
+    minim = new Minim(this);
+    adc = minim.getLineIn( Minim.MONO, 512 );
+  }
   Arm armInit = new Arm();
   Leg legInit = new Leg();
   for (int i=0;i<arm.length;i++) {
     arm[i] = new Arm(armInit.frames);
     arm[i].makeTexture();
-    //arm[i].debug = true;
+    if(debug) arm[i].debug = true;
     arm[i].p = new PVector(320, 240, 0);
     arm[i].index = int(random(arm[i].frames.length));
   }
@@ -70,24 +83,27 @@ void setup() {
   for (int i=0;i<leg.length;i++) {
     leg[i] = new Leg(legInit.frames);
     leg[i].makeTexture();
-    //leg[i].debug = true;
+    if(debug) leg[i].debug = true;
     leg[i].p = new PVector(320, 240, 0);
     leg[i].index = int(random(leg[i].frames.length));
   }    
   torso = new Torso();
   torso.makeTexture();
-  //torso.debug = true;
+  if(debug) torso.debug = true;
   torso.p = new PVector(320, 240, 0);
 
-  Bacterium bacterium = new Bacterium();
-  for (int i=0;i<bacteria.length;i++) {
-    bacteria[i] = new Bacterium(bacterium.frames);
-    bacteria[i].make3D(); //adds a Z axis and other features. You can also makeTexture to control individual vertices.
-    bacteria[i].p = new PVector(random(sW), random(sH), random(sD)-(sD/2));
-    bacteria[i].index = random(bacteria[i].frames.length);
-    bacteria[i].r = 0;
-    bacteria[i].t = new PVector(random(sW), random(sH), random(sD)-(sD/2));
-    bacteria[i].s = new PVector(0.1,0.1);
+  if(doBacteria){
+    Bacterium bacterium = new Bacterium();
+    for (int i=0;i<bacteria.length;i++) {
+      bacteria[i] = new Bacterium(bacterium.frames);
+      bacteria[i].make3D(); //adds a Z axis and other features. You can also makeTexture to control individual vertices.
+      bacteria[i].p = new PVector(random(sW), random(sH), random(sD)-(sD/2));
+      bacteria[i].index = random(bacteria[i].frames.length);
+      bacteria[i].r = 0;
+      bacteria[i].t = new PVector(random(sW), random(sH), random(sD)-(sD/2));
+      bacteria[i].s = new PVector(0.1,0.1);
+      if(debug) bacteria[i].debug = true;
+    }
   }
 
   //setupGl();
@@ -230,26 +246,28 @@ void drawMain() {
   arm[0].run();
   arm[2].run();
 
-  head.index = int(trackVolume(13, 75, 2));
+  if(audioTrigger) head.index = int(trackVolume(13, 75, 2));
   head.run();
   leg[1].run();
   leg[3].run();
   arm[1].run();
   arm[3].run();
 
-  for (int i=0;i<bacteria.length;i++) {
-    
-    bacteria[i].run();
-
-    if(dist(bacteria[i].p.x,bacteria[i].p.y,bacteria[i].p.z,bacteria[i].t.x,bacteria[i].t.y,bacteria[i].t.z)>50){
-      canvas.noFill();
-      canvas.strokeWeight(random(1, 5));
-      canvas.stroke(255, 50, 0, random(1, 5));
-      canvas.beginShape();
-      canvas.vertex(bacteria[i].p.x, bacteria[i].p.y, bacteria[i].p.z);
-      //vertex(mouseX, mouseY, 0);
-      canvas.vertex(head.p.x,head.p.y, 0);
-      canvas.endShape();
+  if(doBacteria){
+    for (int i=0;i<bacteria.length;i++) {
+      
+      bacteria[i].run();
+  
+      if(dist(bacteria[i].p.x,bacteria[i].p.y,bacteria[i].p.z,bacteria[i].t.x,bacteria[i].t.y,bacteria[i].t.z)>50){
+        canvas.noFill();
+        canvas.strokeWeight(random(1, 5));
+        canvas.stroke(255, 50, 0, random(1, 5));
+        canvas.beginShape();
+        canvas.vertex(bacteria[i].p.x, bacteria[i].p.y, bacteria[i].p.z);
+        //vertex(mouseX, mouseY, 0);
+        canvas.vertex(head.p.x,head.p.y, 0);
+        canvas.endShape();
+      }
     }
   }
   canvas.imageMode(CORNER);
@@ -260,18 +278,22 @@ void drawMain() {
 }
 
 float trackVolume(float _scale, float _amp, float _floor) {
-  float volumeLevel=0;  //must reset to 0 each frame before measuring
-  for (int i = 0; i < adc.bufferSize() - 1; i++) {
-    if ( abs(adc.mix.get(i)) > volumeLevel ) {
-      volumeLevel = abs(adc.mix.get(i));
+  try{
+    float volumeLevel=0;  //must reset to 0 each frame before measuring
+    for (int i = 0; i < adc.bufferSize() - 1; i++) {
+      if ( abs(adc.mix.get(i)) > volumeLevel ) {
+        volumeLevel = abs(adc.mix.get(i));
+      }
     }
-  }
-  float returnVal = (_scale * (volumeLevel * _amp))/_scale;
-  if (returnVal>_floor) {
-    if (returnVal > _scale) returnVal = _scale;
-    return returnVal;
-  }
-  else {
+    float returnVal = (_scale * (volumeLevel * _amp))/_scale;
+    if (returnVal>_floor) {
+      if (returnVal > _scale) returnVal = _scale;
+      return returnVal;
+    }
+    else {
+      return 0;
+    }
+  }catch(Exception e){
     return 0;
   }
 }
