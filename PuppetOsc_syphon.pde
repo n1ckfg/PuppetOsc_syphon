@@ -5,10 +5,6 @@
 import processing.opengl.*;
 import codeanticode.syphon.*;
 import ddf.minim.*;
-import pbox2d.*;
-import org.jbox2d.collision.shapes.*;
-import org.jbox2d.common.*;
-import org.jbox2d.dynamics.*;
 
 int sW = 800;
 int sH = 600;
@@ -28,12 +24,6 @@ String[] osceletonNames = {
 };
 PVector[] osceletonVec = new PVector[osceletonNames.length];
 
-// A reference to our box2d world
-PBox2D box2d;
-
-// An ArrayList of particles that will fall on the surface
-ArrayList particles;
-
 float noiseIter = 0.0;
 int ballSize = 10;
 
@@ -43,7 +33,6 @@ AudioInput adc;
 int numBacteria = 100;
 Bacterium[] bacteria = new Bacterium[numBacteria];
 float tractorLimit = 100;
-
 
 AnimSprite head;
 
@@ -101,14 +90,6 @@ void setup() {
     bacteria[i].s = new PVector(0.1,0.1);
   }
 
-  // Initialize box2d physics and create the world
-  box2d = new PBox2D(this);
-  box2d.createWorld();
-  // We are setting a custom gravity
-  box2d.setGravity(0, -40);
-
-  // Create the empty list
-  particles = new ArrayList();
   //setupGl();
   background(0);
 }
@@ -150,7 +131,6 @@ void drawMain() {
   }
 
   for (Skeleton s: skels.values()) {
-    s.addCollisionLine();
 
     //"head", "neck", "torso", "l_shoulder", "l_elbow", "l_hand", "r_shoulder", "r_elbow", "r_hand", "l_hip", "l_knee", "l_foot", "r_hip", "r_knee", "r_foot"
     if(isadoraEcho){
@@ -256,38 +236,6 @@ void drawMain() {
   leg[3].run();
   arm[1].run();
   arm[3].run();
-
-  //particles.add(new Particle(noise(noiseIter)*width,0,random(2,6)));
-  particles.add(new Particle(head.p.x, head.p.y, random(2, 6)));
-  noiseIter += 0.01;
-
-  // We must always step through time!
-  box2d.step();
-
-  // Draw all particles
-  for (int i = 0; i < particles.size(); i++) {
-    Particle p = (Particle) particles.get(i);
-    p.display();
-  }
-
-  // Particles that leave the screen, we delete them
-  // (note they have to be deleted from both the box2d world and our list
-  for (int i = particles.size()-1; i >= 0; i--) {
-    Particle p = (Particle) particles.get(i);
-    if (p.done()) {
-      particles.remove(i);
-    }
-  }
-
-  for (Skeleton s: skels.values()) {
-    box2d.destroyBody(s.body);
-    s.body = box2d.world.createBody(s.bd);
-    //s.edges = new EdgeChainDef();
-    //s.edges.setIsLoop(false);   // We could make the edge a full loop
-    //s.edges.friction = 0.1;    // How much friction
-    //s.edges.restitution = 1.3; // How bouncy
-  }
-
 
   for (int i=0;i<bacteria.length;i++) {
     

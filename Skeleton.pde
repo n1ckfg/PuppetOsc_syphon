@@ -36,30 +36,11 @@ class Skeleton {
   int id; //here we store the skeleton's ID as assigned by OpenNI and sent through OSC.
   float colors[] = {255, 255, 255};// The color of this skeleton
 
-  // An object to store information about the uneven surface
-  //EdgeChainDef edges = new EdgeChainDef ();
-  BodyDef bd = new BodyDef();
-  Body body;
-
   Skeleton(int id) {
     this.id = id;
     colors[0] = random(128, 255);
     colors[1] = random(128, 255);
     colors[2] = random(128, 255);
-    
-    // Create the surface
-    bd.position.set(0.0f,0.0f);
-    body = box2d.world.createBody(bd);
   }
-  
-  void addCollisionLine() {
-    Vec2 screenVertex;
-    Vec2 worldVertex;
-  
-    for (float[] j: collisionLine) {
-      screenVertex = new Vec2(j[0]*width,j[1]*height);
-      //worldVertex = box2d.screenToWorld(screenVertex);
-      //edges.addVertex(worldVertex);
-    }
-  }
+
 }
