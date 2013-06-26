@@ -10,6 +10,7 @@ class Settings {
         if (settings.data[i].equals("Stage Width")) sW = setInt(settings.data[i+1]);
         if (settings.data[i].equals("Stage Height")) sH = setInt(settings.data[i+1]);
         if (settings.data[i].equals("Framerate")) fps = setInt(settings.data[i+1]);
+        if (settings.data[i].equals("Background Color")) bgColor = setColor(settings.data[i+1]);
         if (settings.data[i].equals("OSC Receive Port")) receivePort = setInt(settings.data[i+1]);
         if (settings.data[i].equals("Hand Trigger Distance")) tractorLimit = setFloat(settings.data[i+1]);
         if (settings.data[i].equals("Audio Trigger")) audioTrigger = setBoolean(settings.data[i+1]);

@@ -7,6 +7,9 @@ Stage Height
 Framerate
 60
 
+Background Color
+0
+
 OSC Receive Port
 61863
 
@@ -23,16 +26,16 @@ Bacteria Mode
 true
 
 Sprite Folder - Head
-horsebuyer
+head
 
 Sprite Folder - Arm
-lightning-h
+lightning
 
 Sprite Folder - Leg
-lightning-h
+lightning
 
 Sprite Folder - Torso
-lightning-h
+lightning
 
 Spritesheet - Bacterium
 bacterium

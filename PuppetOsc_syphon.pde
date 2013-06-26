@@ -20,6 +20,8 @@ boolean hideCursor = true;
 boolean alphaMode = true;
 boolean isadoraEcho = true;
 boolean doBacteria = true;
+color bgColor = color(0);
+boolean showBackground = true;
 
 String[] osceletonNames = {
   "head", "neck", "torso", "l_shoulder", "l_elbow", "l_hand", "r_shoulder", "r_elbow", "r_hand", "l_hip", "l_knee", "l_foot", "r_hip", "r_knee", "r_foot"
@@ -107,7 +109,7 @@ void setup() {
   }
 
   //setupGl();
-  background(0);
+  if(showBackground) background(bgColor);
 }
 
 void drawBone(float joint1[], float joint2[]) {
@@ -129,21 +131,21 @@ void drawBone(float joint1[], float joint2[]) {
 
 
 void draw() {
-  //background(0);
+  //background(bgColor);
   //drawGl();
   drawMain();
 }
 
 void drawMain() {
   canvas.beginDraw();
-  if (alphaMode) {
+  if (alphaMode && showBackground) {
     canvas.noStroke();
-    canvas.fill(0, 50);
+    canvas.fill(bgColor, 50);
     canvas.rectMode(CORNER);
     canvas.rect(0, 0, width, height);
   }
   else {
-    canvas.background(0);
+    if(showBackground) canvas.background(bgColor);
   }
 
   for (Skeleton s: skels.values()) {
